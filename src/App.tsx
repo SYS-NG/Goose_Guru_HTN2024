@@ -5,6 +5,7 @@ import { SignInForm } from "@/SignInForm";
 import { UserMenu } from "@/components/UserMenu";
 import { Authenticated, Unauthenticated, useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
+import { MainBoard } from "@/MainBoard/MainBoard";
 
 export default function App() {
   const user = useQuery(api.users.viewer);
@@ -18,11 +19,14 @@ export default function App() {
     >
       <>
         <Authenticated>
-          <ChatIntro />
-          <Chat viewer={(user ?? {})._id!} />
+          <MainBoard/>
+          <></> {/* Placeholder */}
+          {/* <ChatIntro />
+          <Chat viewer={(user ?? {})._id!} /> */}
         </Authenticated>
         <Unauthenticated>
-          <SignInForm />
+          <></> {/* Placeholder */}
+          {/* <SignInForm /> */}
         </Unauthenticated>
       </>
     </Layout>
