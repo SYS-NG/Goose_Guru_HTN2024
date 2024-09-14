@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 
-export const AudioSTT: React.FC = () => {
+export const STT: React.FC = () => {
   const [transcript, setTranscript] = useState(''); // Final transcript
   const [recognitionActive, setRecognitionActive] = useState(false);
   const [interimTranscript, setInterimTranscript] = useState(''); // Interim results
