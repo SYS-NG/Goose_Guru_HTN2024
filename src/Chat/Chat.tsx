@@ -13,11 +13,15 @@ export function Chat({ viewer }: { viewer: Id<"users"> }) {
   const [newMessageText, setNewMessageText] = useState("");
   const messages = useQuery(api.messages.list);
   const sendMessage = useMutation(api.messages.send);
+  const getUserId   = useQuery(api.users.getUserId)
+  const userId = getUserId;
+  const getInterviewId = useQuery(api.interview.getCurrentInterview, userId);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const interviewId = getInterviewId;
     event.preventDefault();
     setNewMessageText("");
-    sendMessage({ body: newMessageText }).catch((error) => {
+    sendMessage({ body: newMessageText, role: "User", interviewId: interviewId }).catch((error) => {
       console.error("Failed to send message:", error);
     });
   };

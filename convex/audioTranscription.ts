@@ -48,9 +48,6 @@ export const transcribe = action({
     const transcriptionText = result.text;
     console.log("Transcription:", transcriptionText);
 
-    // Save Qrog's response user dialogue
-    await ctx.runMutation(api.messages.send, {
-      body: transcriptionText,
-    });
+    return transcriptionText;
   },
 });
