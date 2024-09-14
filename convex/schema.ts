@@ -11,9 +11,9 @@ export default defineSchema({
     userId: v.id("users"),
     body: v.string(),
   }),
-  audioSubmissions: defineTable({
+  audioFiles: defineTable({
     userId: v.id("users"),
-    storageID: v.string(),
+    storageID: v.id("_storage"),
     format: v.string(),
   }),
   codingProblems: defineTable({
