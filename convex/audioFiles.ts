@@ -9,13 +9,13 @@ export const generateUploadUrl = mutation(async (ctx) => {
 });
 
 export const sendAudioFile = mutation({
-  args: { storageId: v.id("storageId") },
+  args: { storageId: v.id("_storage") },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {
       throw new Error("Not signed in");
     }
-    await ctx.db.insert("audioSubmissions", {
+    await ctx.db.insert("audioFiles", {
       userId: userId,
       storageID: args.storageId,
       format: "audio",

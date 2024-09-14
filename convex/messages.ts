@@ -21,6 +21,15 @@ export const send = mutation({
   args: { body: v.string() },
   handler: async (ctx, { body }) => {
     const userId = await getAuthUserId(ctx);
+    /*
+      During function testing for audioTranscription:transcribe there is an issue
+      adding the transcribed text as a message in the db. I predict it is because of
+      testing in the dashboard and I am not "signed in"
+
+      If future issue arises, fastest way might be to get rid of the check. Use simple
+      user id instead of auth
+    */
+
     if (userId === null) {
       throw new Error("Not signed in");
     }

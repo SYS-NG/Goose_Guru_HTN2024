@@ -16,6 +16,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as audioFiles from "../audioFiles.js";
+import type * as audioTranscription from "../audioTranscription.js";
 import type * as auth from "../auth.js";
 import type * as codeSubmissions from "../codeSubmissions.js";
 import type * as codingProblems from "../codingProblems.js";
@@ -33,6 +34,7 @@ import type * as users from "../users.js";
  */
 declare const fullApi: ApiFromModules<{
   audioFiles: typeof audioFiles;
+  audioTranscription: typeof audioTranscription;
   auth: typeof auth;
   codeSubmissions: typeof codeSubmissions;
   codingProblems: typeof codingProblems;
