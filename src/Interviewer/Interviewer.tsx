@@ -4,7 +4,11 @@ interface InterviewerProps {
 
 export function Interviewer({ grow }: InterviewerProps) {
   return (
-    <div className={`flex-grow-[${grow}] w-full h-full bg-gray-100 rounded-md p-4`}>
+    <div
+      style={{ flexGrow: grow }}
+      className="bg-gray-100 rounded-md p-4 flex items-center justify-center"
+    >
+      <span className="text-lg">Flex Grow: {grow}</span>
     </div>
-  )
+  );
 }
