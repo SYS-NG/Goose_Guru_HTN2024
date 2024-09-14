@@ -6,6 +6,7 @@ import { UserMenu } from "@/components/UserMenu";
 import { Authenticated, Unauthenticated, useQuery } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { MainBoard } from "@/MainBoard/MainBoard";
+import { AudioSTT } from "@/AudioSTT";
 
 export default function App() {
   const user = useQuery(api.users.viewer);
@@ -19,6 +20,7 @@ export default function App() {
     >
       <>
         <Authenticated>
+          <AudioSTT/>
           <MainBoard/>
           <></> {/* Placeholder */}
           {/* <ChatIntro />
