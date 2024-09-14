@@ -71,20 +71,11 @@ export const AudioSTT: React.FC = () => {
     recognition.start();
   };
 
-  const stopRecognition = () => {
-    if (recognition && recognitionActive) {
-      recognition.stop();
-    }
-  };
-
   return (
     <div>
       <h1>Speech to Text using Web Speech API</h1>
       <button onClick={startRecognition} disabled={recognitionActive}>
         Start Recognition
-      </button>
-      <button onClick={stopRecognition} disabled={!recognitionActive}>
-        Stop Recognition
       </button>
 
       <p><strong>Final Transcript:</strong> {transcript}</p>
