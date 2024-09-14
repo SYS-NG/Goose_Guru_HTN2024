@@ -21,8 +21,8 @@ export default function App() {
     >
       <>
         <Authenticated>
-          <STT/>
-          <TTS/>
+          {/* <STT/>
+          <TTS/> */}
           <MainBoard/>
           <></> {/* Placeholder */}
           {/* <ChatIntro />
