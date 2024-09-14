@@ -11,4 +11,23 @@ export default defineSchema({
     userId: v.id("users"),
     body: v.string(),
   }),
+  audioSubmissions: defineTable({
+    userId: v.id("users"),
+    storageID: v.string(),
+    format: v.string(),
+  }),
+  codingProblems: defineTable({
+    problemId: v.id("codingProblems"),
+    title: v.string(),
+    description: v.string(),
+    inputFormat: v.string(),
+    outputFormat: v.string(),
+    sampleInput: v.string(),
+    sampleOutput: v.string()
+  }),
+  codeSubmissions: defineTable({
+    userId: v.id("users"),
+    problemId: v.string(),
+    code: v.string(),
+  }),
 });
