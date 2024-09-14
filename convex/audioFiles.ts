@@ -9,7 +9,7 @@ export const generateUploadUrl = mutation(async (ctx) => {
 });
 
 export const sendAudioFile = mutation({
-  args: { storageId: v.id("_storage") },
+  args: { storageId: v.id("storageId") },
   handler: async (ctx, args) => {
     const userId = await getAuthUserId(ctx);
     if (userId === null) {

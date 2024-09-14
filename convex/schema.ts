@@ -17,7 +17,7 @@ export default defineSchema({
     format: v.string(),
   }),
   codingProblems: defineTable({
-    problemId: v.id("codingProblems"),
+    problemId: v.string(),
     title: v.string(),
     description: v.string(),
     inputFormat: v.string(),
