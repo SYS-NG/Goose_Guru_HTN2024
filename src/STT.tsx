@@ -15,6 +15,8 @@ export const STT: React.FC = ({ restartCount }: { restartCount: number }) => {
   const getInterviewIdQuery = useQuery(api.interview.getCurrentInterview);
   const generateResponse = useAction(api.conversation.generateResponse);
 
+  const problemDesc = "1 + 1 = 2";
+
   useEffect(() => {
     // Fetch the interview ID whenever the user ID changes
     const fetchInterviewId = async () => {
@@ -79,7 +81,7 @@ export const STT: React.FC = ({ restartCount }: { restartCount: number }) => {
 
         if (interviewId) {
           // Await the generateResponse action
-          const response = await generateResponse({ interviewId: interviewId, message: transcriptRef.current });
+          const response = await generateResponse({ interviewId: interviewId, message: transcriptRef.current, problemDesc: problemDesc});
           modelResponse = response.interviewResponse;
           console.log('ASSISTANT:', modelResponse);
         }

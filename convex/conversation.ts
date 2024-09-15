@@ -17,7 +17,7 @@ interface CohereResponse {
 }
 
 export const generateResponse = action({
-  args: { interviewId: v.id("interviews"), message: v.string() },
+  args: { interviewId: v.id("interviews"), message: v.string(), problemDesc: v.string()},
   handler: async (ctx, args): Promise<{ interviewResponse: string }> => {
     // Store the user's message
     await ctx.runMutation(api.messages.send, {
@@ -47,14 +47,20 @@ export const generateResponse = action({
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "command",
+        model: "command-r-plus-08-2024",
         prompt: `Your name is Steven and you are a human software engineer that works in Big Tech
-          You are conducting a coding interview with me.
-          Keep your response to 1 - 2 sentences if possible. 
-          Respond to the following conversation:\n\n${prompt}
+          You are conducting a coding interview with me. You are friendly and easy going. You love working in tech.
+          You like to guide candidates along if they are struggling. You like to listen more than you talk.
+          Keep your response to 1 - 2 sentences if possible. Your philosophy is that coding is more than about the process than the result.
+
+          Here is the problem for the interviewee to solve: ${args.problemDesc}
+  
+          If the candidate does not say anything, don't say anything either. Wait for at least 5 empty prompt.
+    
+          Here is the response to the most recent prompt (if it is not silence) given the History: ${prompt}
         `,
         max_tokens: 200,
-        temperature: 0.7,
+        temperature: 0.2,
       }),
     });
 
