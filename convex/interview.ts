@@ -50,6 +50,7 @@ export const getCurrentInterview = query({
       .filter((q) => q.eq(q.field("userId"), userId))
       .filter((q) => q.eq(q.field("status"), "ongoing"))
       .first();
+    console.log("Get cur interview", interview)
     return interview;
   },
 });
