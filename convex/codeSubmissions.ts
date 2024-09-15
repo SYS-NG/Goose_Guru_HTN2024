@@ -51,9 +51,6 @@ export const submit = action({
       Here is the candidate's solution:
       "${args.userAns}"
 
-      Here is what the canonical solution is suppose to be:
-      "${args.canonicalAns}"
-
       Ignore the function header as that is given by the problem.
 
       Please provide comprehensive, concrete, and actionable feedback. Identify specific areas where the candidate could improve and suggest how they might do so. Finally, provide a score from 1 to 10, where 10 represents a perfect solution in terms of clarity, organization, efficiency, and comparison to the canonical solution.

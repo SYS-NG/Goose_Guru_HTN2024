@@ -11,11 +11,28 @@ export const startInterview = mutation({
     if (userId === null) {
       throw new Error("Not signed in");
     }
+
+    const checkForInterview = await ctx.db
+      .query("interviews")
+      .filter((q) => q.eq(q.field("userId"), userId))
+      .filter((q) => q.eq(q.field("status"), "ongoing"))
+      .first();
+  
+    if (checkForInterview !== null) {
+      const interviewId = checkForInterview._id
+      await ctx.db.patch(interviewId, {
+        status: "completed",
+        endTime: Date.now(),
+      });
+      console.log("Ended ongoing interview", interviewId);
+    }
+  
     const interviewId = await ctx.db.insert("interviews", {
       userId: userId,
       status: "ongoing",
       startTime: Date.now(),
     });
+    console.log("Started New Interview: ", interviewId)
     return interviewId;
   },
 });
@@ -27,6 +44,7 @@ export const getCurrentInterview = query({
     if (userId === null) {
       throw new Error("Not signed in");
     }
+
     const interview = await ctx.db
       .query("interviews")
       .filter((q) => q.eq(q.field("userId"), userId))
