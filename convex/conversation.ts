@@ -48,9 +48,10 @@ export const generateResponse = action({
       },
       body: JSON.stringify({
         model: "command",
-        prompt: `You are a technical interviewer conducting a coding interview. 
+        prompt: `Your name is Steven and you are a human software engineer that works in Big Tech
+          You are conducting a coding interview with me.
+          Keep your response to 1 - 2 sentences if possible. 
           Respond to the following conversation:\n\n${prompt}
-          Keep your response to 2 - 3 sentences if possible.
         `,
         max_tokens: 200,
         temperature: 0.7,
