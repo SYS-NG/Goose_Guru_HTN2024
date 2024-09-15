@@ -1,9 +1,27 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useMutation, useQuery, useAction } from "convex/react";
+import { api } from "../convex/_generated/api";
+import { Id } from "../convex/_generated/dataModel";
 
 export const STT: React.FC = () => {
   const [transcript, setTranscript] = useState(''); // Final transcript
   const [recognitionActive, setRecognitionActive] = useState(false);
   const [interimTranscript, setInterimTranscript] = useState(''); // Interim results
+  const [interviewId, setInterviewId] = useState<Id<"interviews">>();
+
+  const getInterviewIdQuery = useQuery(api.interview.getCurrentInterview);
+  const generateResponse = useAction(api.conversation.generateResponse);
+
+  useEffect(() => {
+    // Fetch the interview ID whenever the user ID changes
+    const fetchInterviewId = async () => {
+      const interview =  {getInterviewIdQuery};
+      console.log(interview)
+      setInterviewId(interview.getInterviewIdQuery?._id);
+    };
+
+    fetchInterviewId();
+  }, [getInterviewIdQuery]);
 
   // Check if SpeechRecognition is available in the browser
   const SpeechRecognition =
@@ -50,6 +68,11 @@ export const STT: React.FC = () => {
       // Delay restarting the recognition by 2 seconds
       setTimeout(() => {
         console.log('Speech recognition ended, resetting...');
+        
+        if (interviewId) {
+          const response = generateResponse({ interviewId: interviewId, message: transcript });
+          console.log(response);
+        }
   
         // Reset transcripts and restart the recognition process
         setTranscript('');

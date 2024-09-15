@@ -1,12 +1,6 @@
 import { action } from "./_generated/server";
 import { v } from "convex/values";
 
-// Define the structure for test cases
-const TestCase = v.object({
-  input: v.string(),
-  expectedOutput: v.string(),
-});
-
 /*
   Expecting code to be a single block the runs all by itself
 */
