@@ -13,7 +13,8 @@ export default function App() {
   const executeCode = useAction(api.codeExecution.executeCode);
   const endInterview = useMutation(api.interview.endInterview);
   const submitCode = useAction(api.codeSubmissions.submit);
-  
+  const evalChat = useAction(api.codeSubmissions.evaluateChatHistory);
+
   const [code, setCode] = useState(
     'print("UNIT TEST 1 PASSED")\nprint("UNIT TEST 2 PASSED")\nprint("UNIT TEST 3 PASSED")'
   );
@@ -25,8 +26,6 @@ export default function App() {
       // Sending the code to backend
       const result = await executeCode({ language: "py", code: code });
       console.log("Execute Code Result:", result);
-      
-      console.log("here")
       const submitResult = await submitCode({
         problemId: "1", 
         problemQuestion: "You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n, representing the number of elements in nums1 and nums2 respectively. Merge nums1 and nums2 into a single array sorted in non-decreasing order. The final sorted array should not be returned by the function, but instead be stored inside the array nums1. To accommodate this, nums1 has a length of m + n, where the first m elements denote the elements that should be merged, and the last n elements are set to 0 and should be ignored. nums2 has a length of n.", 
@@ -34,6 +33,9 @@ export default function App() {
         canonicalAns: "class Solution:\ndef merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:"
       });
       console.log("Submit Code Result:", submitResult);
+
+      const evalChatResult = await evalChat();
+      console.log("Eval Chat Result", evalChatResult)
 
       const endResult = await endInterview();
       console.log("End Button Result:", endResult);

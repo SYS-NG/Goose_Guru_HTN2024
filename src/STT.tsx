@@ -21,6 +21,7 @@ export const STT: React.FC = ({ restartCounter, handleStart }: STTProps) => {
   const generateResponse = useAction(api.conversation.generateResponse);
 
   const problemDesc = "1 + 1 = 2";
+  const currentCode = "def tryMyBest():\n"
 
   useEffect(() => {
     // Fetch the interview ID whenever the user ID changes
@@ -86,7 +87,12 @@ export const STT: React.FC = ({ restartCounter, handleStart }: STTProps) => {
 
         if (interviewId) {
           // Await the generateResponse action
-          const response = await generateResponse({ interviewId: interviewId, message: transcriptRef.current, problemDesc: problemDesc});
+          const response = await generateResponse({ 
+            interviewId: interviewId,
+            message: transcriptRef.current, 
+            problemDesc: problemDesc,
+            currentCode: currentCode,
+          });
           modelResponse = response.interviewResponse;
           console.log('ASSISTANT:', modelResponse);
         }

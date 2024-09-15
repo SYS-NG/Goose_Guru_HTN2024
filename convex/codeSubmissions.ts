@@ -2,6 +2,7 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 import { action, mutation, query } from "./_generated/server";
 import { Id } from "./_generated/dataModel";
+import { api } from "./_generated/api";
 
 export const list = query({
   args: { problemId: v.id("codeSubmissions") },
@@ -26,6 +27,122 @@ export const list = query({
     );
   },
 });
+
+interface Message {
+  role: string;
+  body: string;
+}
+
+interface CohereResponse {
+  generations: Array<{
+    text: string;
+  }>;
+}
+
+export const evaluateChatHistory = action({
+  args: { },
+  handler: async (ctx, args) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      throw new Error("Not signed in");
+    }
+
+    // Get the interview ID
+    const interview = await ctx.runQuery(api.interview.getCurrentInterview);
+    console.log("INTERVIEW", interview)
+    if (interview === null)
+    {
+      throw new Error("No ongoing interview");
+    }
+  
+    // Get the chat history
+    const previousMessages: Message[] = await ctx.runQuery(api.interview.getInterviewMessages, {
+      interviewId: interview._id
+    });
+
+    // Prepare the prompt with chat history
+    const chatHistory: string = previousMessages
+      .map((msg: Message) => `${msg.role}: ${msg.body}`)
+      .join("\n") + `\n`;
+
+    const outputStructure = {
+      overallFeedback: "string",
+      overallScore: "number",
+      engagment: {
+        feedback: "string",
+        score: "number"
+      },
+      honesty: {
+        feedback: "string",
+        score: "number"
+      },
+      openness: {
+        feedback: "string",
+        score: "number"
+      },
+      clear: {
+        feedback: "string",
+        score: "number"
+      },
+      areasForImprovement: ["string"]
+    };
+
+    console.log(chatHistory);
+
+    // Prepare the prompt with question data
+    const prompt: string = `
+      You are an experienced HR professional evaluating a chat history between a technical interviewer and a software engineer candidate for a role in your company. Your main focus for this assessment is the candidate's engagement, openness, clarity, and honesty in the conversation. Please analyze the chat history based on the following criteria:
+      1. **Engagement**: How actively does the candidate participate in the conversation? Do they ask relevant questions, show interest in the company and role, and provide detailed responses? Treat any prolonged silences or one-word answers as a lack of engagement.
+      2. **Openness**: Does the candidate share their thoughts and experiences freely? Are they receptive to new ideas or feedback? Do they discuss both strengths and areas for improvement?
+      3. **Clarity**: How well does the candidate articulate their thoughts and experiences? Are their responses clear, concise, and easy to understand? Do they use relevant examples to illustrate their points?
+      4. **Honesty**: Does the candidate appear to be truthful and authentic in their responses? Do they admit when they don't know something, and do their claims about their skills and experiences seem consistent and realistic?
+
+      Please provide detailed, actionable feedback on each of these aspects. Highlight areas where the candidate excelled and where they could improve. If there are many instances of silence or lack of engagement during the chat, reflect this in your scoring and feedback.
+      Give scores for each category and an overall score from 1 to 10, where 10 represents an excellent performance. Emphasize the importance of active participation and genuine interaction in the interview process.
+
+      The conversations are expected to be short, so do not judge the number of dialogues. Instead focus on the number of silence input from the user.
+
+      Here is the chat history to evaluate:
+      "${chatHistory}"
+
+      Output Structure: ${JSON.stringify(outputStructure, null, 2)}
+
+      Respond only with valid JSON that matches the provided structure.
+      `;
+
+    // Generate a response using Cohere API
+    const response: Response = await fetch("https://api.cohere.ai/v1/chat", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.COHERE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "command-r-plus-08-2024",
+        message: prompt,
+        max_tokens: 300,
+        temperature: 0.2,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Cohere API request failed: ${response.statusText}`);
+    }
+
+    const cohereResponse = await response.json();
+    const submissionResponse: string = cohereResponse.text;
+
+    if (userId === null) {
+      throw new Error("Not signed in");
+    }
+
+    console.log(submissionResponse)
+    return {
+      submissionResponse: submissionResponse
+    };
+  }
+})
+
 
 export const submit = action({
   args: {

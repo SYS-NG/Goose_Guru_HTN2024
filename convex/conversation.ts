@@ -17,7 +17,7 @@ interface CohereResponse {
 }
 
 export const generateResponse = action({
-  args: { interviewId: v.id("interviews"), message: v.string(), problemDesc: v.string()},
+  args: { interviewId: v.id("interviews"), message: v.string(), problemDesc: v.string(), currentCode: v.string()},
   handler: async (ctx, args): Promise<{ interviewResponse: string }> => {
     // Store the user's message
     await ctx.runMutation(api.messages.send, {
@@ -34,10 +34,7 @@ export const generateResponse = action({
     // Prepare the prompt with chat history
     const prompt: string = chatHistory
       .map((msg: Message) => `${msg.role}: ${msg.body}`)
-      .join("\n") + `\ninterviewer: `;
-    
-    console.log("Cohere API Key: ", process.env.COHERE_API_KEY);
-    console.log(prompt)
+      .join("\n") + `\n`;
 
     // Generate a response using Cohere API
     const response: Response = await fetch("https://api.cohere.ai/v1/generate", {
@@ -48,16 +45,20 @@ export const generateResponse = action({
       },
       body: JSON.stringify({
         model: "command-r-plus-08-2024",
-        prompt: `Your name is Steven and you are a human software engineer that works in Big Tech
+        prompt: `Your name is Emily and you are a human software engineer that works in Big Tech
           You are conducting a coding interview with me. You are friendly and easy going. You love working in tech.
-          You like to guide candidates along if they are struggling. You like to listen more than you talk.
+          You like to listen more than you talk.
           Keep your response to 1 - 2 sentences if possible. Your philosophy is that coding is more than about the process than the result.
 
           Here is the problem for the interviewee to solve: ${args.problemDesc}
+
+          This is the current code from the candidate: ${args.currentCode}
   
-          If the candidate does not say anything, don't say anything either. Wait for at least 5 empty prompt.
+          If the candidate does not say anything, don't say anything either unless there was prolonged silence. If nothing has gone one in a while,
+          ask what the candidate's thought process is currently.
     
-          Here is the response to the most recent prompt (if it is not silence) given the History: ${prompt}
+          Here is the response to the most recent prompt given the History: ${prompt}
+          Speak in first person as Emily.
         `,
         max_tokens: 200,
         temperature: 0.2,
@@ -82,6 +83,12 @@ export const generateResponse = action({
       role: "interviewer",
       body: interviewerResponse,
     });
+
+    if (interviewerResponse === "[silence]") {
+      return {
+        interviewResponse: ""
+      };
+    }
 
     return {
       interviewResponse: interviewerResponse
