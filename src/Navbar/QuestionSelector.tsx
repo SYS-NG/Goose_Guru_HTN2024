@@ -10,25 +10,25 @@ import {
   SelectItem,
 } from '@/components/ui/select'; // Adjust the import path based on your project structure
 
-// Define the type for options
-type Option = 'problem1' | 'problem2' | 'problem3' | 'problem4';
+interface QuestionSelectorProps {
+  selectedOption: string;
+  setSelectedOption: React.Dispatch<React.SetStateAction<string>>;
+}
 
-export function QuestionSelector() {
-  const [selectedOption, setSelectedOption] = useState<Option>('problem1');
-
+export function QuestionSelector({ selectedOption, setSelectedOption }: QuestionSelectorProps) {
   return (
     <div className="w-64">
-      <Select value={selectedOption} onValueChange={(value: Option) => setSelectedOption(value)}>
+      <Select value={selectedOption} onValueChange={(value: string) => setSelectedOption(value)}>
         <SelectTrigger className="w-full">
           <SelectValue placeholder="Select an option" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Problems</SelectLabel>
-            <SelectItem value="problem1">Valid Palindrome</SelectItem>
-            <SelectItem value="problem2">Merge Sorted Array</SelectItem>
-            <SelectItem value="problem3">Two Sum</SelectItem> {/* Not Implemented! */}
-            <SelectItem value="problem4">Invert Binary Tree</SelectItem> {/* Not Implemented! */}
+            <SelectItem value="pq1">Valid Palindrome</SelectItem>
+            <SelectItem value="pq2">Merge Sorted Array</SelectItem>
+            <SelectItem value="pq3">Two Sum</SelectItem> {/* Not Implemented! */}
+            <SelectItem value="pq4">Invert Binary Tree</SelectItem> {/* Not Implemented! */}
           </SelectGroup>
         </SelectContent>
       </Select>
