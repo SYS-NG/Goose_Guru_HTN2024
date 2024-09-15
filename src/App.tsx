@@ -21,8 +21,8 @@ export default function App() {
     >
       <>
         <Authenticated>
-          {/* <STT/>
-          <TTS/> */}
+          <STT/>
+          <TTS/>
           <MainBoard/>
           <></> {/* Placeholder */}
           {/* <ChatIntro />
@@ -30,7 +30,7 @@ export default function App() {
         </Authenticated>
         <Unauthenticated>
           <></> {/* Placeholder */}
-          {/* <SignInForm /> */}
+          <SignInForm />
         </Unauthenticated>
       </>
     </Layout>

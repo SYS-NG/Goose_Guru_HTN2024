@@ -21,7 +21,9 @@ import type * as auth from "../auth.js";
 import type * as codeExecution from "../codeExecution.js";
 import type * as codeSubmissions from "../codeSubmissions.js";
 import type * as codingProblems from "../codingProblems.js";
+import type * as conversation from "../conversation.js";
 import type * as http from "../http.js";
+import type * as interview from "../interview.js";
 import type * as messages from "../messages.js";
 import type * as users from "../users.js";
 
@@ -40,7 +42,9 @@ declare const fullApi: ApiFromModules<{
   codeExecution: typeof codeExecution;
   codeSubmissions: typeof codeSubmissions;
   codingProblems: typeof codingProblems;
+  conversation: typeof conversation;
   http: typeof http;
+  interview: typeof interview;
   messages: typeof messages;
   users: typeof users;
 }>;

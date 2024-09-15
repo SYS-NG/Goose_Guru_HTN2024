@@ -21,6 +21,11 @@ export function Layout({
             <QuestionSelector />
             <Button className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]">Run</Button>
             <Button className="bg-green-500 text-white hover:bg-green-600 w-[100px]">Submit</Button>
+            <GetStartedDialog>
+                <button className="text-muted-foreground transition-colors hover:text-foreground">
+                  Help
+                </button>
+            </GetStartedDialog>
           </div>
           {menu}
         </nav>

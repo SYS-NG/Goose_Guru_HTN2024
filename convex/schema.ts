@@ -10,6 +10,8 @@ export default defineSchema({
   messages: defineTable({
     userId: v.id("users"),
     body: v.string(),
+    interviewId: v.string(),
+    role: v.string(),
   }),
   audioFiles: defineTable({
     userId: v.id("users"),
@@ -29,5 +31,11 @@ export default defineSchema({
     userId: v.id("users"),
     problemId: v.string(),
     code: v.string(),
+  }),
+  interviews: defineTable({
+    userId: v.string(),
+    status: v.string(), // "ongoing" or "completed"
+    startTime: v.number(),
+    endTime: v.optional(v.number()),
   }),
 });

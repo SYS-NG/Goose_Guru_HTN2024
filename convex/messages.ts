@@ -18,9 +18,10 @@ export const list = query({
 });
 
 export const send = mutation({
-  args: { body: v.string() },
-  handler: async (ctx, { body }) => {
+  args: { interviewId: v.id("interviews"), role: v.string(), body: v.string() },
+  handler: async (ctx, { interviewId, body, role }) => {
     const userId = await getAuthUserId(ctx);
+
     /*
       During function testing for audioTranscription:transcribe there is an issue
       adding the transcribed text as a message in the db. I predict it is because of
@@ -34,6 +35,6 @@ export const send = mutation({
       throw new Error("Not signed in");
     }
     // Send a new message.
-    await ctx.db.insert("messages", { body, userId });
+    await ctx.db.insert("messages", { body, role, userId, interviewId });
   },
 });
