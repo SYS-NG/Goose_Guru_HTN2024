@@ -35,6 +35,9 @@ export const generateResponse = action({
     const prompt: string = chatHistory
       .map((msg: Message) => `${msg.role}: ${msg.body}`)
       .join("\n") + `\ninterviewer: `;
+    
+    console.log("Cohere API Key: ", process.env.COHERE_API_KEY);
+    console.log(prompt)
 
     // Generate a response using Cohere API
     const response: Response = await fetch("https://api.cohere.ai/v1/generate", {
@@ -45,8 +48,11 @@ export const generateResponse = action({
       },
       body: JSON.stringify({
         model: "command",
-        prompt: `You are a technical interviewer conducting a coding interview. Respond to the following conversation:\n\n${prompt}`,
-        max_tokens: 300,
+        prompt: `You are a technical interviewer conducting a coding interview. 
+          Respond to the following conversation:\n\n${prompt}
+          Keep your response to 2 - 3 sentences if possible.
+        `,
+        max_tokens: 200,
         temperature: 0.7,
       }),
     });

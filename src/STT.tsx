@@ -18,13 +18,8 @@ export const STT: React.FC = ({ restartCount }: { restartCount: number }) => {
   useEffect(() => {
     // Fetch the interview ID whenever the user ID changes
     const fetchInterviewId = async () => {
-      try {
-        const interview = await getInterviewIdQuery; // Assuming getInterviewIdQuery returns a promise
-        console.log(interview);
-        setInterviewId(interview?._id); // Adjusted based on your data structure
-      } catch (error) {
-        console.error('Error fetching interview ID:', error);
-      }
+      const interview =  {getInterviewIdQuery};
+      setInterviewId(interview.getInterviewIdQuery?._id);
     };
 
     fetchInterviewId();
