@@ -2,6 +2,8 @@ import { ReactNode } from "react";
 import { GetStartedDialog } from "@/GetStarted/GetStartedDialog";
 import { Button } from "@/components/ui/button"
 import { QuestionSelector } from "@/Navbar/QuestionSelector"
+import { useMutation, useQuery, useAction } from "convex/react";
+import { api } from "../convex/_generated/api";
 
 export function Layout({
   menu,
@@ -10,6 +12,16 @@ export function Layout({
   menu?: ReactNode;
   children: ReactNode;
 }) {
+  const startInterview = useMutation(api.interview.startInterview);
+  const handleStart = async () => {
+    try {
+      // Sending the code to backend
+      const result = await startInterview();
+      console.log("Start Button Result:", result);
+    } catch (error) {
+      console.error("Error in Start Button:", error);
+    }
+  };
   return (
     <div className="flex h-screen w-full flex-col">
       <header className="sticky top-0 z-10 flex min-h-20 border-b bg-background/80 backdrop-blur">
@@ -19,6 +31,7 @@ export function Layout({
           </div>
           <div className="flex items-center gap-3">
             <QuestionSelector />
+            <Button onClick={handleStart} className="bg-gray-500 text-white hover:bg-blue-600 w-[100px]">Start</Button>
             <Button className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]">Run</Button>
             <Button className="bg-green-500 text-white hover:bg-green-600 w-[100px]">Submit</Button>
             <GetStartedDialog>
@@ -34,7 +47,7 @@ export function Layout({
       {/* <footer className="border-t hidden sm:block">
         <div className="container py-4 text-sm leading-loose">
           Built with ❤️ by Andy and Steven.{" "}
-          Powered by Convex, Cohere, and Groq.{" "}
+          Powered by Convex and Cohere.{" "}
         </div>
       </footer> */}
     </div>

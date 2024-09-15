@@ -37,8 +37,22 @@ export const getCurrentInterview = query({
 });
 
 export const endInterview = mutation({
-  args: { interviewId: v.id("interviews") },
-  handler: async (ctx, { interviewId }) => {
+  args: { },
+  handler: async (ctx) => {
+    const userId = await getAuthUserId(ctx);
+    if (userId === null) {
+      throw new Error("Not signed in");
+    }
+    const interview = await ctx.db
+      .query("interviews")
+      .filter((q) => q.eq(q.field("userId"), userId))
+      .filter((q) => q.eq(q.field("status"), "ongoing"))
+      .first();
+    
+    if (interview === null) {
+      throw new Error("No Ongoing Interview. Can not Terminate");
+    }
+    const interviewId = interview._id
     await ctx.db.patch(interviewId, {
       status: "completed",
       endTime: Date.now(),

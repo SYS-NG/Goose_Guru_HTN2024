@@ -22,7 +22,7 @@ export const executeCode = action({
     const { language, code } = args;
 
     // CodeX API endpoint
-    const CODEX_API = "https://api.codex.jaagrav.in";
+    const CODEX_API = 'https://api.codex.jaagrav.in';
 
     const data = {
       code: code,

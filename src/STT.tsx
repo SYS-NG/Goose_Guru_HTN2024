@@ -21,7 +21,7 @@ export const STT: React.FC = () => {
     };
 
     fetchInterviewId();
-  }, [getInterviewIdQuery]);
+  }, [getInterviewIdQuery]); // useEffect when start button pressed
 
   // Check if SpeechRecognition is available in the browser
   const SpeechRecognition =
