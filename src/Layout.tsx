@@ -7,9 +7,11 @@ import { api } from "../convex/_generated/api";
 
 export function Layout({
   menu,
+  setRestartCount,
   children,
 }: {
   menu?: ReactNode;
+  setRestartCount: (count: number) => void;
   children: ReactNode;
 }) {
   const startInterview = useMutation(api.interview.startInterview);
@@ -17,11 +19,13 @@ export function Layout({
     try {
       // Sending the code to backend
       const result = await startInterview();
+      setRestartCount((prev) => prev + 1);
       console.log("Start Button Result:", result);
     } catch (error) {
       console.error("Error in Start Button:", error);
     }
   };
+
   return (
     <div className="flex h-screen w-full flex-col">
       <header className="sticky top-0 z-10 flex min-h-20 border-b bg-background/80 backdrop-blur">

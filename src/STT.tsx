@@ -3,7 +3,7 @@ import { useMutation, useQuery, useAction } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { Id } from "../convex/_generated/dataModel";
 
-export const STT: React.FC = () => {
+export const STT: React.FC = ({ restartCount }: { restartCount: number }) => {
   const [transcript, setTranscript] = useState(''); // Final transcript
   const [recognitionActive, setRecognitionActive] = useState(false);
   const [interimTranscript, setInterimTranscript] = useState(''); // Interim results
@@ -15,13 +15,13 @@ export const STT: React.FC = () => {
   useEffect(() => {
     // Fetch the interview ID whenever the user ID changes
     const fetchInterviewId = async () => {
-      const interview =  {getInterviewIdQuery};
+      const interview = {getInterviewIdQuery};
       console.log(interview)
       setInterviewId(interview.getInterviewIdQuery?._id);
     };
 
     fetchInterviewId();
-  }, [getInterviewIdQuery]); // useEffect when start button pressed
+  }, [getInterviewIdQuery, restartCount]); // useEffect when start button pressed
 
   // Check if SpeechRecognition is available in the browser
   const SpeechRecognition =
@@ -70,8 +70,13 @@ export const STT: React.FC = () => {
         console.log('Speech recognition ended, resetting...');
         
         if (interviewId) {
-          const response = generateResponse({ interviewId: interviewId, message: transcript });
-          console.log(response);
+          generateResponse({ interviewId: interviewId, message: transcript })
+            .then((response) => {
+              console.log(response);
+            })
+            .catch((error) => {
+              console.error('Error generating response:', error);
+            })
         }
   
         // Reset transcripts and restart the recognition process

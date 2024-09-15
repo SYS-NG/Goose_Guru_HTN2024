@@ -8,8 +8,11 @@ import { api } from "../convex/_generated/api";
 import { MainBoard } from "@/MainBoard/MainBoard";
 import { STT } from "@/STT";
 import { TTS } from "@/TTS";
+import { useState } from "react";
 
 export default function App() {
+  const [restartCount, setRestartCount] = useState(0);
+
   const user = useQuery(api.users.viewer);
   return (
     <Layout
@@ -18,10 +21,11 @@ export default function App() {
           <UserMenu>{user?.name ?? user?.email}</UserMenu>
         </Authenticated>
       }
+      setRestartCount={setRestartCount}
     >
       <>
         <Authenticated>
-          <STT/>
+          <STT restartCount={restartCount} />
           <TTS/>
           <MainBoard/>
           <></> {/* Placeholder */}
