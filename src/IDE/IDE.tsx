@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import CodeEditor from '@uiw/react-textarea-code-editor';
+import { useMutation, useQuery, useAction } from "convex/react";
+import { api } from "../../convex/_generated/api";
 
 interface InterviewerProps {
   grow: number;
@@ -7,20 +9,53 @@ interface InterviewerProps {
 
 export function IDE({ grow }: InterviewerProps) {
   const [code, setCode] = useState(
-    `function add(a, b) {\n  return a + b;\n}`
+    'val = int(input("Enter your value: ")) + 5\nprint(val)'
   );
+
+  const executeCode = useAction(api.codeExecution.executeCode);
+  
+  const handleSubmit = async () => {
+    try {
+      // Sending the code to backend
+      const result = await executeCode({ language: "py", code: code });
+      console.log("Submit Button Result:", result);
+
+      // Leave space for additional submit logic here
+      // E.g., saving the code to the database or triggering further actions
+    } catch (error) {
+      console.error("Error in Submit:", error);
+    }
+  };
+
+  // Handle Run button logic
+  const handleRun = async () => {
+    try {
+      // Sending the code to backend
+      const result = await executeCode({ language: "py", code: code });
+      console.log("Run Button Result:", result);
+    } catch (error) {
+      console.error("Error in Run:", error);
+    }
+  };
+
   return (
-    <CodeEditor
-      value={code}
-      language="js"
-      placeholder="Please enter JS code."
-      onChange={(evn) => setCode(evn.target.value)}
-      padding={15}
-      style={{
-        flexGrow: grow,
-        backgroundColor: "#f5f5f5",
-        fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-      }}
-    />
+    <div>
+      <CodeEditor
+        value={code}
+        language="js"
+        placeholder="Please enter JS code."
+        onChange={(evn) => setCode(evn.target.value)}
+        padding={15}
+        style={{
+          flexGrow: grow,
+          backgroundColor: "#f5f5f5",
+          fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+        }}
+      />
+      <div style={{ marginTop: '20px' }}>
+        <button onClick={handleSubmit}>Submit</button>
+        <button onClick={handleRun} style={{ marginLeft: '10px' }}>Run</button>
+      </div>
+    </div>
   );
 }
