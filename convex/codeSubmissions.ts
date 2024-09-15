@@ -60,10 +60,42 @@ export const evaluateChatHistory = action({
       interviewId: interview._id
     });
 
-    // Prepare the prompt with chat history
-    const chatHistory: string = previousMessages
-      .map((msg: Message) => `${msg.role}: ${msg.body}`)
-      .join("\n") + `\n`;
+    // // Prepare the prompt with chat history
+    // const chatHistory: string = previousMessages
+    //   .map((msg: Message) => `${msg.role}: ${msg.body}`)
+    //   .join("\n") + `\n`;
+
+    const chatHistory: string = `
+      interviewer: Welcome to the coding interview! Let's start with a simple problem. Please write a function that takes two numbers and returns their sum.
+      user: Sure! Here's my solution:
+
+      function add(a, b) {
+        return a + b;
+      }
+
+      interviewer: Great, your solution looks correct. Now, let's make it more interesting. What if the inputs could also be strings representing numbers? Could you modify your function to handle that case?
+      user: Got it! I'll update the function to convert strings to numbers before adding them:
+
+      function add(a, b) {
+        return Number(a) + Number(b);
+      }
+
+      interviewer: Good approach! But what happens if the input is not a valid number? Can you add some error handling to account for that?
+      user: Yes, I can add a check to handle invalid input:
+
+      function add(a, b) {
+        if (isNaN(a) || isNaN(b)) {
+          throw new Error('Invalid input');
+        }
+        return Number(a) + Number(b);
+      }
+
+      interviewer: Nice! Your function is now more robust. Let's move on to performance. How would you optimize this function if it were part of a large-scale application where performance is critical?
+      user: I think the function is already pretty optimal for this case, as adding two numbers is O(1). But if we were handling large datasets or repeated calculations, I might cache results or batch operations.
+      interviewer: Good thinking! That concludes this part of the interview. Do you have any questions for me before we wrap up?
+      user: No questions at the moment. Thanks for your time!
+      interviewer: You're welcome! We'll be in touch with feedback soon. Have a great day!
+    `
 
     const outputStructure = {
       overallFeedback: "string",
