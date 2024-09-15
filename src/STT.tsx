@@ -25,12 +25,13 @@ export const STT: React.FC = ({ restartCounter, handleStart }: STTProps) => {
 
   useEffect(() => {
     // Fetch the interview ID whenever the user ID changes
-    const fetchInterviewId = async () => {
+    const fetchInterviewId = () => {
       const interview =  {getInterviewIdQuery};
       setInterviewId(interview.getInterviewIdQuery?._id);
     };
 
     fetchInterviewId();
+    
   }, [getInterviewIdQuery, restartCounter]); // useEffect when start button pressed
 
   useEffect(() => {
@@ -84,17 +85,22 @@ export const STT: React.FC = ({ restartCounter, handleStart }: STTProps) => {
 
       try {
         let modelResponse = null;
+        const latestInterview =  {getInterviewIdQuery};
+        const latestInterviewId = latestInterview?.getInterviewIdQuery?._id;
+        console.log("Checking Inteview ID HERE:", interviewId)
 
-        if (interviewId) {
+        if (latestInterviewId) {
           // Await the generateResponse action
           const response = await generateResponse({ 
-            interviewId: interviewId,
+            interviewId: latestInterviewId,
             message: transcriptRef.current, 
             problemDesc: problemDesc,
             currentCode: currentCode,
           });
           modelResponse = response.interviewResponse;
           console.log('ASSISTANT:', modelResponse);
+        } else {
+          console.error('No valid interview ID found');
         }
 
         if (modelResponse !== null) {

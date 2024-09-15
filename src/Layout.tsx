@@ -24,10 +24,10 @@ export function Layout({
   const [restartCounter, setRestartCount] = useState(0);
 
   const startInterview = useMutation(api.interview.startInterview);
-  const handleStart = async () => {
+  const handleStart = () => {
     try {
       // Sending the code to backend
-      const result = await startInterview();
+      const result = startInterview();
       setRestartCount(restartCounter + 1);
       console.log("Start Button Result:", result);
     } catch (error) {
