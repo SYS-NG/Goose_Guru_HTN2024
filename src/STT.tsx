@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
+import React, { useState, useEffect, useRef } from 'react';
 import { useMutation, useQuery, useAction } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { Id } from "../convex/_generated/dataModel";
+import { speakText } from '@/SpeakText';
 
 export const STT: React.FC = ({ restartCount }: { restartCount: number }) => {
   const [transcript, setTranscript] = useState(''); // Final transcript
   const [recognitionActive, setRecognitionActive] = useState(false);
   const [interimTranscript, setInterimTranscript] = useState(''); // Interim results
   const [interviewId, setInterviewId] = useState<Id<"interviews">>();
+  const transcriptRef = useRef(transcript); // Ref to hold latest transcript
 
   const getInterviewIdQuery = useQuery(api.interview.getCurrentInterview);
   const generateResponse = useAction(api.conversation.generateResponse);
@@ -15,13 +18,21 @@ export const STT: React.FC = ({ restartCount }: { restartCount: number }) => {
   useEffect(() => {
     // Fetch the interview ID whenever the user ID changes
     const fetchInterviewId = async () => {
-      const interview = {getInterviewIdQuery};
-      console.log(interview)
-      setInterviewId(interview.getInterviewIdQuery?._id);
+      try {
+        const interview = await getInterviewIdQuery; // Assuming getInterviewIdQuery returns a promise
+        console.log(interview);
+        setInterviewId(interview?._id); // Adjusted based on your data structure
+      } catch (error) {
+        console.error('Error fetching interview ID:', error);
+      }
     };
 
     fetchInterviewId();
   }, [getInterviewIdQuery, restartCount]); // useEffect when start button pressed
+
+  useEffect(() => {
+    transcriptRef.current = transcript;
+  }, [transcript]);
 
   // Check if SpeechRecognition is available in the browser
   const SpeechRecognition =
@@ -64,29 +75,35 @@ export const STT: React.FC = ({ restartCount }: { restartCount: number }) => {
     };
 
     // Handle when recognition ends (reset everything and restart with 2s delay)
-    recognition.onend = () => {
-      // Delay restarting the recognition by 2 seconds
-      setTimeout(() => {
-        console.log('Speech recognition ended, resetting...');
-        
-        if (interviewId) {
-          generateResponse({ interviewId: interviewId, message: transcript })
-            .then((response) => {
-              console.log(response);
-            })
-            .catch((error) => {
-              console.error('Error generating response:', error);
-            })
-        }
-  
-        // Reset transcripts and restart the recognition process
-        setTranscript('');
-        setInterimTranscript('');
-        setRecognitionActive(false);
+    recognition.onend = async () => {
+      console.log('Speech recognition ended, resetting...');
+      console.log('USER:', transcriptRef.current); // Use ref here
 
-        console.log('Restarting recognition after 2s delay...');
-        startRecognition(); // Restart the recognition process after the delay
-      }, 2000); // 2000 milliseconds = 2 seconds
+      try {
+        let modelResponse = null;
+
+        if (interviewId) {
+          // Await the generateResponse action
+          const response = await generateResponse({ interviewId: interviewId, message: transcriptRef.current });
+          modelResponse = response.interviewResponse;
+          console.log('ASSISTANT:', modelResponse);
+        }
+
+        if (modelResponse !== null) {
+          // Await the speakText function
+          await speakText(modelResponse);
+          console.log('Speech completed.');
+        }
+      } catch (error) {
+        console.error('Error during response generation or speech:', error);
+      }
+
+      // Reset transcripts and restart the recognition process after a delay
+      setTranscript('');
+      setInterimTranscript('');
+      setRecognitionActive(false);
+
+      startRecognition(); // Restart the recognition process
     };
 
     // Handle errors
@@ -100,14 +117,12 @@ export const STT: React.FC = ({ restartCount }: { restartCount: number }) => {
   };
 
   return (
-    <div>
-      <h1>Speech to Text using Web Speech API</h1>
-      <button onClick={startRecognition} disabled={recognitionActive}>
-        Start Recognition
-      </button>
-
-      <p><strong>Final Transcript:</strong> {transcript}</p>
-      <p><strong>Interim Transcript:</strong> {interimTranscript}</p>
-    </div>
+    <Button 
+      className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]"
+      onClick={startRecognition}
+      disabled={recognitionActive}
+    >
+      Turn On Audio
+    </Button>
   );
 };
