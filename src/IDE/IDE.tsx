@@ -3,9 +3,11 @@ import CodeEditor from '@uiw/react-textarea-code-editor';
 import { useMutation, useQuery, useAction } from "convex/react";
 import { api } from "../../convex/_generated/api";
 
-interface IDEProps {}
+interface IDEProps {
+  setCodeExecResult: (result: string) => void;
+}
 
-export function IDE({}: IDEProps) {
+export function IDE({ setCodeExecResult }: IDEProps) {
   // Parameters
   const fixedPixels = 150; // Pixels to subtract
   const percentage = 70; // Percentage of remaining height
@@ -14,7 +16,7 @@ export function IDE({}: IDEProps) {
   const componentHeight = `calc(${percentage}vh - ${fixedPixels * (percentage / 100)}px)`;
 
   const [code, setCode] = useState(
-    'val = int("1") + 5\nprint(val)'
+    'print("UNIT TEST 1 PASSED")\nprint("UNIT TEST 2 PASSED")\nprint("UNIT TEST 3 PASSED")'
   );
 
   const executeCode = useAction(api.codeExecution.executeCode);
@@ -49,7 +51,12 @@ export function IDE({}: IDEProps) {
     try {
       // Sending the code to backend
       const result = await executeCode({ language: "py", code: code });
-      console.log("Run Button Result:", result);
+      if (result.error === "") {
+        setCodeExecResult(result.output);
+        console.log("Output:", result.output);
+      } else {
+        console.log("Error in Run:", result.error);
+      }
     } catch (error) {
       console.error("Error in Run:", error);
     }

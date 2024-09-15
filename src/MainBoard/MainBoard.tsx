@@ -1,11 +1,13 @@
 // MainBoard.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Interviewer } from "@/Interviewer/Interviewer";
 import { Question } from "@/Question/Question";
 import { IDE } from "@/IDE/IDE";
 import { Output } from "@/Output/Output";
 
-export function MainBoard() {
+export function MainBoard({}) {
+  const [codeExecResult, setCodeExecResult] = useState("");
+
   return (
     <div className="flex flex-col md:flex-row justify-center w-full h-screen m-4 gap-5">
       {/* First Column */}
@@ -26,8 +28,8 @@ export function MainBoard() {
 
       {/* Second Column */}
       <div className="flex flex-col flex-1 gap-5 h-full">
-        <IDE />
-        <Output />
+        <IDE setCodeExecResult={setCodeExecResult} />
+        <Output codeExecResult={codeExecResult} />
       </div>
     </div>
   );

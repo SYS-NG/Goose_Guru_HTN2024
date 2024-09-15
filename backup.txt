@@ -1,0 +1,2 @@
+https://resolute-mouse-71.convex.site/api/auth/callback/github
+https://opulent-zebra-853.convex.site/api/auth/callback/github
