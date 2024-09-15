@@ -31,6 +31,7 @@ export function Layout({
   children,
 }: LayoutProps) {
   const [restartCounter, setRestartCount] = useState(0);
+  const [isInterviewStarted, setIsInterviewStarted] = useState(false); // Track if interview has started
 
   const startInterview = useMutation(api.interview.startInterview);
   const handleStart = () => {
@@ -39,6 +40,7 @@ export function Layout({
       const result = startInterview();
       setRestartCount(restartCounter + 1);
       console.log("Start Button Result:", result);
+      setIsInterviewStarted(true); // Enable the buttons after interview starts
     } catch (error) {
       console.error("Error in Start Button:", error);
     }
@@ -54,8 +56,20 @@ export function Layout({
           <div className="flex items-center gap-3">
             <QuestionSelector selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
             <STT problem={selectedOption in pqs ? pqs[selectedOption as keyof object] : pqs.pq1} restartCounter={restartCounter} handleStart={handleStart} code={code} modelResponse={modelResponse} setModelResponse={setModelResponse} />
-            <Button className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]" onClick={handleRun}>Run</Button>
-            <Button className="bg-green-500 text-white hover:bg-green-600 w-[100px]" onClick={handleSubmit}>Submit</Button>
+            <Button
+              className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]" 
+              onClick={handleRun}
+              disabled={!isInterviewStarted} // Disable until interview starts
+            >
+                Run
+            </Button>
+            <Button 
+              className="bg-green-500 text-white hover:bg-green-600 w-[100px]" 
+              onClick={()=>{handleSubmit; setIsInterviewStarted(false);}}
+              disabled={!isInterviewStarted} // Disable until interview starts
+            >
+              Submit
+            </Button>
           </div>
           {menu}
         </nav>
