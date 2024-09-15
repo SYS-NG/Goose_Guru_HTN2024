@@ -13,11 +13,12 @@ export default function App() {
   const executeCode = useAction(api.codeExecution.executeCode);
   const endInterview = useMutation(api.interview.endInterview);
   const submitCode = useAction(api.codeSubmissions.submit);
-
+  
   const [code, setCode] = useState(
     'print("UNIT TEST 1 PASSED")\nprint("UNIT TEST 2 PASSED")\nprint("UNIT TEST 3 PASSED")'
   );
   const [codeExecResult, setCodeExecResult] = useState("");
+  const [selectedOption, setSelectedOption] = useState<string>('pq1');
 
   const handleSubmit = async () => {
     try {
@@ -66,7 +67,9 @@ export default function App() {
         </Authenticated>
       }
       handleSubmit={handleSubmit}
-      handleRun={handleRun} 
+      handleRun={handleRun}
+      selectedOption={selectedOption}
+      setSelectedOption={setSelectedOption}
     >
       <>
         <Authenticated>

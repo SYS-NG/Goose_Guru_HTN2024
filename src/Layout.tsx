@@ -10,11 +10,15 @@ export function Layout({
   menu,
   handleSubmit,
   handleRun,
+  selectedOption,
+  setSelectedOption,
   children,
 }: {
   menu?: ReactNode;
   handleSubmit: () => void;
   handleRun: () => void;
+  selectedOption: string;
+  setSelectedOption: React.Dispatch<React.SetStateAction<string>>;
   children: ReactNode;
 }) {
   const [restartCounter, setRestartCount] = useState(0);
@@ -39,7 +43,7 @@ export function Layout({
             <h1 className="text-base font-semibold">Goose Guru</h1>
           </div>
           <div className="flex items-center gap-3">
-            <QuestionSelector />
+            <QuestionSelector selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
             <STT restartCounter={restartCounter} handleStart={handleStart} />
             <Button className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]" onClick={handleRun}>Run</Button>
             <Button className="bg-green-500 text-white hover:bg-green-600 w-[100px]" onClick={handleSubmit}>Submit</Button>
