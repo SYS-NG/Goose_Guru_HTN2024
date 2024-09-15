@@ -8,9 +8,13 @@ import { STT } from "@/STT";
 
 export function Layout({
   menu,
+  handleSubmit,
+  handleRun,
   children,
 }: {
   menu?: ReactNode;
+  handleSubmit: () => void;
+  handleRun: () => void;
   children: ReactNode;
 }) {
   const [restartCounter, setRestartCount] = useState(0);
@@ -36,10 +40,9 @@ export function Layout({
           </div>
           <div className="flex items-center gap-3">
             <QuestionSelector />
-            <STT restartCounter={restartCounter} />
-            <Button onClick={handleStart} className="bg-gray-500 text-white hover:bg-blue-600 w-[100px]">Start</Button>
-            <Button className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]">Run</Button>
-            <Button className="bg-green-500 text-white hover:bg-green-600 w-[100px]">Submit</Button>
+            <STT restartCounter={restartCounter} handleStart={handleStart} />
+            <Button className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]" onClick={handleRun}>Run</Button>
+            <Button className="bg-green-500 text-white hover:bg-green-600 w-[100px]" onClick={handleSubmit}>Submit</Button>
           </div>
           {menu}
         </nav>
