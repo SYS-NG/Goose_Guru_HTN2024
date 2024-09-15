@@ -14,23 +14,31 @@ export function IDE({}: IDEProps) {
   const componentHeight = `calc(${percentage}vh - ${fixedPixels * (percentage / 100)}px)`;
 
   const [code, setCode] = useState(
-    'val = int(input("Enter your value: ")) + 5\nprint(val)'
+    'val = int("1") + 5\nprint(val)'
   );
 
   const executeCode = useAction(api.codeExecution.executeCode);
   const endInterview = useMutation(api.interview.endInterview);
+  const submitCode = useAction(api.codeSubmissions.submit);
 
   const handleSubmit = async () => {
     try {
       // Sending the code to backend
       const result = await executeCode({ language: "py", code: code });
-      console.log("Submit Button Result:", result);
+      console.log("Execute Code Result:", result);
       
+      console.log("here")
+      const submitResult = await submitCode({
+        problemId: "1", 
+        problemQuestion: "You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n, representing the number of elements in nums1 and nums2 respectively. Merge nums1 and nums2 into a single array sorted in non-decreasing order. The final sorted array should not be returned by the function, but instead be stored inside the array nums1. To accommodate this, nums1 has a length of m + n, where the first m elements denote the elements that should be merged, and the last n elements are set to 0 and should be ignored. nums2 has a length of n.", 
+        userAns: "class Solution:\ndef merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:\nmidx = m - 1\nnidx = n - 1 \nright = m + n - 1\nwhile nidx >= 0:\nif midx >= 0 and nums1[midx] > nums2[nidx]:\nnums1[right] = nums1[midx]\nmidx -= 1\nelse:\nnums1[right] = nums2[nidx]\nnidx -= 1\nright -= 1", 
+        canonicalAns: "class Solution:\ndef merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:"
+      });
+      console.log("Submit Code Result:", submitResult);
+
       const endResult = await endInterview();
       console.log("End Button Result:", endResult);
-
-      // Leave space for additional submit logic here
-      // E.g., saving the code to the database or triggering further actions
+  
     } catch (error) {
       console.error("Error in Submit:", error);
     }

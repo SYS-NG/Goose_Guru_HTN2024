@@ -35,6 +35,9 @@ export const generateResponse = action({
     const prompt: string = chatHistory
       .map((msg: Message) => `${msg.role}: ${msg.body}`)
       .join("\n") + `\ninterviewer: `;
+    
+    console.log("Cohere API Key: ", process.env.COHERE_API_KEY);
+    console.log(prompt)
 
     // Generate a response using Cohere API
     const response: Response = await fetch("https://api.cohere.ai/v1/generate", {

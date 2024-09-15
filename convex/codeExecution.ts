@@ -29,10 +29,8 @@ export const executeCode = action({
       'python': 71,
       // Add more languages as needed
     };
-    console.log(code)
     // Encode the source code in base64
     const encodedCode = btoa(code);
-    console.log(encodedCode)
 
     // First API call to submit the code
     const submitUrl = 'https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=true&wait=false&fields=*';

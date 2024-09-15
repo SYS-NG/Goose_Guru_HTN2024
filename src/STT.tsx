@@ -16,7 +16,6 @@ export const STT: React.FC = () => {
     // Fetch the interview ID whenever the user ID changes
     const fetchInterviewId = async () => {
       const interview =  {getInterviewIdQuery};
-      console.log(interview)
       setInterviewId(interview.getInterviewIdQuery?._id);
     };
 
