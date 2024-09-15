@@ -18,12 +18,16 @@ export function IDE({}: IDEProps) {
   );
 
   const executeCode = useAction(api.codeExecution.executeCode);
-  
+  const endInterview = useMutation(api.interview.endInterview);
+
   const handleSubmit = async () => {
     try {
       // Sending the code to backend
       const result = await executeCode({ language: "py", code: code });
       console.log("Submit Button Result:", result);
+      
+      const endResult = await endInterview();
+      console.log("End Button Result:", endResult);
 
       // Leave space for additional submit logic here
       // E.g., saving the code to the database or triggering further actions
