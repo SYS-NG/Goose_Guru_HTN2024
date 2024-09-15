@@ -5,6 +5,19 @@ import { QuestionSelector } from "@/Navbar/QuestionSelector"
 import { useMutation, useQuery, useAction } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { STT } from "@/STT";
+import { pqs } from "@/ProgrammingQuestions";
+
+interface LayoutProps {
+  menu?: ReactNode;
+  handleSubmit: () => void;
+  handleRun: () => void;
+  selectedOption: string;
+  setSelectedOption: React.Dispatch<React.SetStateAction<string>>;
+  code: string;
+  modelResponse: null | string;
+  setModelResponse: React.Dispatch<React.SetStateAction<null | string>>;
+  children: ReactNode;
+}
 
 export function Layout({
   menu,
@@ -12,15 +25,11 @@ export function Layout({
   handleRun,
   selectedOption,
   setSelectedOption,
+  code,
+  modelResponse,
+  setModelResponse,
   children,
-}: {
-  menu?: ReactNode;
-  handleSubmit: () => void;
-  handleRun: () => void;
-  selectedOption: string;
-  setSelectedOption: React.Dispatch<React.SetStateAction<string>>;
-  children: ReactNode;
-}) {
+}: LayoutProps) {
   const [restartCounter, setRestartCount] = useState(0);
 
   const startInterview = useMutation(api.interview.startInterview);
@@ -44,7 +53,7 @@ export function Layout({
           </div>
           <div className="flex items-center gap-3">
             <QuestionSelector selectedOption={selectedOption} setSelectedOption={setSelectedOption} />
-            <STT restartCounter={restartCounter} handleStart={handleStart} />
+            <STT problem={selectedOption in pqs ? pqs[selectedOption as keyof object] : pqs.pq1} restartCounter={restartCounter} handleStart={handleStart} code={code} modelResponse={modelResponse} setModelResponse={setModelResponse} />
             <Button className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]" onClick={handleRun}>Run</Button>
             <Button className="bg-green-500 text-white hover:bg-green-600 w-[100px]" onClick={handleSubmit}>Submit</Button>
           </div>

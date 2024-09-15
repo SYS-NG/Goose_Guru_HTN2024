@@ -12,6 +12,7 @@ export interface Problem {
   Prompt: string[];
   StyledPrompt: string[];
   Examples: Example[];
+  DocTag: string;
   CanonicalSolution: string;
   UnitTest: string;
 }
@@ -46,6 +47,9 @@ const pq1: Problem = {
       Explanation: 's is an empty string "" after removing non-alphanumeric characters. Since an empty string reads the same forward and backward, it is a palindrome.'
     }
   ],
+  DocTag: `class Solution:
+    def isPalindrome(self, s: str) -> bool:
+        pass`,
   CanonicalSolution: `class Solution:
     def isPalindrome(self, s: str) -> bool:
 

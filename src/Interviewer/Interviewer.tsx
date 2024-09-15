@@ -1,4 +1,3 @@
-// Interviewer.tsx
 import React, { useState, useEffect, useRef } from 'react';
 
 interface InterviewerProps {
@@ -13,7 +12,7 @@ export function Interviewer({
   imageSrc,
   altText = "Interviewer Icon",
   label = "",
-  placeholder = "Enter your text here...",
+  placeholder = "Waiting for response...",
   streamingSpeed = 100, // Default streaming speed (milliseconds per character)
 }: InterviewerProps) {
   // Parameters
@@ -21,11 +20,14 @@ export function Interviewer({
   const percentage = 30;   // Percentage of remaining height
 
   // Calculate the component height using calc()
-  const componentHeight = `calc(${percentage}vh - ${fixedPixels * (percentage / 100)}px)`;
+  const componentHeight = `calc(${percentage}vh - ${
+    fixedPixels * (percentage / 100)
+  }px)`;
 
   // State to manage the displayed text
   const [displayedText, setDisplayedText] = useState<string>("");
   const intervalRef = useRef<number | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null); // Ref for the textarea
 
   useEffect(() => {
     // Clear any existing intervals
@@ -66,6 +68,13 @@ export function Interviewer({
     }
   }, [label, streamingSpeed]);
 
+  // Auto-scroll to the bottom when displayedText updates
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.scrollTop = textareaRef.current.scrollHeight;
+    }
+  }, [displayedText]);
+
   return (
     <div
       style={{ height: componentHeight }}
@@ -86,8 +95,9 @@ export function Interviewer({
       <div className="w-6"></div>
 
       {/* Textbox Container */}
-      <div className="flex-1">
+      <div className="flex-1 h-full">
         <textarea
+          ref={textareaRef} // Attach the ref to the textarea
           value={displayedText}
           placeholder={!label ? placeholder : ''}
           readOnly={!!label}
@@ -95,7 +105,7 @@ export function Interviewer({
             label ? 'border-gray-300 bg-gray-50' : 'border-blue-300'
           } rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none overflow-auto`}
           style={{
-            maxHeight: '6rem', // Adjust based on icon height (h-24 ~ 6rem)
+            height: '100%', // Ensures the textarea fills the available height
           }}
         />
       </div>
