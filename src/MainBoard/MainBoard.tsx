@@ -14,7 +14,6 @@ interface MainBoardProps {
 }
 
 export function MainBoard({ code, setCode, codeExecResult, selectedOption }: MainBoardProps) {
-
   return (
     <div className="flex flex-col md:flex-row justify-center w-full h-screen m-4 gap-5">
       {/* First Column */}
@@ -22,7 +21,7 @@ export function MainBoard({ code, setCode, codeExecResult, selectedOption }: Mai
         {/* Interviewer - 25% Height */}
         <Interviewer 
           imageSrc="https://media.wired.com/photos/5932933926780e6c04d2cc4d/master/pass/ff_musk4_f.jpg" 
-          label="Hey there! I am Elongated Muskrat, the AI overlord."
+          label={"..."}
         />
         {/* Question - 75% Height */}
         <Question 

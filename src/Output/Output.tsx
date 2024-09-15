@@ -16,7 +16,7 @@ export function Output({ codeExecResult }: OutputProps) {
   return (
     <div
       style={{ height: componentHeight }}
-      className="bg-[#1e1e1e] text-green-400 rounded-lg shadow-lg overflow-hidden"
+      className="bg-[#1e1e1e] text-green-400 rounded-lg shadow-lg overflow-auto"
     >
       {/* Header */}
       <div className="flex items-center bg-gray-800 px-4 py-2">
@@ -31,12 +31,12 @@ export function Output({ codeExecResult }: OutputProps) {
 
       {/* Content */}
       <div className="p-4 overflow-auto">
-        <pre className="whitespace-pre-wrap text-sm font-mono">
+        <pre className="whitespace-pre text-sm font-mono">
           {codeExecResult
             .split('\n')
             .filter((result) => result.trim() !== '')
             .map((result, index) => (
-              <div key={index}>{result}</div>
+              <div key={index}>$ {result}</div>
             ))}
         </pre>
       </div>

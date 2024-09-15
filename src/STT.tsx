@@ -5,12 +5,17 @@ import { api } from "../convex/_generated/api";
 import { Id } from "../convex/_generated/dataModel";
 import { speakText } from '@/SpeakText';
 
-export const STT: React.FC = ({ restartCount, handleStart }: { restartCount: number, handleStart: () => void }) => {
+interface STTProps {
+  restartCounter: number;
+  handleStart: () => void;
+}
+
+export const STT: React.FC = ({ restartCounter, handleStart }: STTProps) => {
   const [transcript, setTranscript] = useState(''); // Final transcript
+  const transcriptRef = useRef(transcript); // Ref to hold latest transcript
   const [recognitionActive, setRecognitionActive] = useState(false);
   const [interimTranscript, setInterimTranscript] = useState(''); // Interim results
   const [interviewId, setInterviewId] = useState<Id<"interviews">>();
-  const transcriptRef = useRef(transcript); // Ref to hold latest transcript
 
   const getInterviewIdQuery = useQuery(api.interview.getCurrentInterview);
   const generateResponse = useAction(api.conversation.generateResponse);
@@ -25,7 +30,7 @@ export const STT: React.FC = ({ restartCount, handleStart }: { restartCount: num
     };
 
     fetchInterviewId();
-  }, [getInterviewIdQuery, restartCount]); // useEffect when start button pressed
+  }, [getInterviewIdQuery, restartCounter]); // useEffect when start button pressed
 
   useEffect(() => {
     transcriptRef.current = transcript;
