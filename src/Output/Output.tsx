@@ -1,4 +1,3 @@
-// Output.tsx
 import React from 'react';
 
 interface OutputProps {
@@ -11,12 +10,14 @@ export function Output({ codeExecResult }: OutputProps) {
   const percentage = 30; // Percentage of remaining height
 
   // Calculate the component height using calc()
-  const componentHeight = `calc(${percentage}vh - ${fixedPixels * (percentage / 100)}px)`;
+  const componentHeight = `calc(${percentage}vh - ${
+    fixedPixels * (percentage / 100)
+  }px)`;
 
   return (
     <div
       style={{ height: componentHeight }}
-      className="bg-[#1e1e1e] text-green-400 rounded-lg shadow-lg overflow-auto"
+      className="bg-[#1e1e1e] rounded-lg shadow-lg overflow-auto"
     >
       {/* Header */}
       <div className="flex items-center bg-gray-800 px-4 py-2">
@@ -36,7 +37,16 @@ export function Output({ codeExecResult }: OutputProps) {
             .split('\n')
             .filter((result) => result.trim() !== '')
             .map((result, index) => (
-              <div key={index}>$ {result}</div>
+              <div
+                key={index}
+                className={
+                  result.startsWith('UNIT TEST FAILED')
+                    ? 'text-red-400'
+                    : 'text-green-400'
+                }
+              >
+                $ {result}
+              </div>
             ))}
         </pre>
       </div>

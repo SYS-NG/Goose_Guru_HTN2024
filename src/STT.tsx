@@ -4,13 +4,18 @@ import { useMutation, useQuery, useAction } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { Id } from "../convex/_generated/dataModel";
 import { speakText } from '@/SpeakText';
+import { Problem } from "@/ProgrammingQuestions";
 
 interface STTProps {
+  problem: Problem;
   restartCounter: number;
   handleStart: () => void;
+  code: string;
+  modelResponse: null | string;
+  setModelResponse: React.Dispatch<React.SetStateAction<null | string>>;
 }
 
-export const STT: React.FC = ({ restartCounter, handleStart }: STTProps) => {
+export const STT: React.FC = ({ problem, restartCounter, handleStart, code, modelResponse, setModelResponse }: STTProps) => {
   const [transcript, setTranscript] = useState(''); // Final transcript
   const transcriptRef = useRef(transcript); // Ref to hold latest transcript
   const [recognitionActive, setRecognitionActive] = useState(false);
@@ -20,18 +25,17 @@ export const STT: React.FC = ({ restartCounter, handleStart }: STTProps) => {
   const getInterviewIdQuery = useQuery(api.interview.getCurrentInterview);
   const generateResponse = useAction(api.conversation.generateResponse);
 
-  const problemDesc = "1 + 1 = 2";
-  const currentCode = "def tryMyBest():\n"
+  const problemDesc = problem.Prompt.join("\n\n");
+  const currentCode = code;
 
   useEffect(() => {
     // Fetch the interview ID whenever the user ID changes
-    const fetchInterviewId = () => {
+    const fetchInterviewId = async () => {
       const interview =  {getInterviewIdQuery};
       setInterviewId(interview.getInterviewIdQuery?._id);
     };
 
     fetchInterviewId();
-    
   }, [getInterviewIdQuery, restartCounter]); // useEffect when start button pressed
 
   useEffect(() => {
@@ -84,28 +88,24 @@ export const STT: React.FC = ({ restartCounter, handleStart }: STTProps) => {
       console.log('USER:', transcriptRef.current); // Use ref here
 
       try {
-        let modelResponse = null;
-        const latestInterview =  {getInterviewIdQuery};
-        const latestInterviewId = latestInterview?.getInterviewIdQuery?._id;
-        console.log("Checking Inteview ID HERE:", interviewId)
+        let res = null;
 
-        if (latestInterviewId) {
+        if (interviewId) {
           // Await the generateResponse action
           const response = await generateResponse({ 
-            interviewId: latestInterviewId,
+            interviewId: interviewId,
             message: transcriptRef.current, 
             problemDesc: problemDesc,
             currentCode: currentCode,
           });
-          modelResponse = response.interviewResponse;
-          console.log('ASSISTANT:', modelResponse);
-        } else {
-          console.error('No valid interview ID found');
+          res = response.interviewResponse;
+          setModelResponse(res);
+          console.log('ASSISTANT:', res);
         }
 
-        if (modelResponse !== null) {
+        if (res !== null) {
           // Await the speakText function
-          await speakText(modelResponse);
+          await speakText(res);
           console.log('Speech completed.');
         }
       } catch (error) {

@@ -6,7 +6,8 @@ import { UserMenu } from "@/components/UserMenu";
 import { Authenticated, Unauthenticated, useQuery, useMutation, useAction } from "convex/react";
 import { api } from "../convex/_generated/api";
 import { MainBoard } from "@/MainBoard/MainBoard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { pqs } from "@/ProgrammingQuestions";
 
 export default function App() {
   const user = useQuery(api.users.viewer);
@@ -15,16 +16,24 @@ export default function App() {
   const submitCode = useAction(api.codeSubmissions.submit);
   const evalChat = useAction(api.codeSubmissions.evaluateChatHistory);
 
-  const [code, setCode] = useState(
-    'print("UNIT TEST 1 PASSED")\nprint("UNIT TEST 2 PASSED")\nprint("UNIT TEST 3 PASSED")'
-  );
+  const [code, setCode] = useState("");
   const [codeExecResult, setCodeExecResult] = useState("");
   const [selectedOption, setSelectedOption] = useState<string>('pq1');
+  const [modelResponse, setModelResponse] = useState<null | string>(null);
+
+  useEffect(() => {
+    if (selectedOption in pqs) {
+      setCode(pqs[selectedOption as keyof object].DocTag);
+    } else {
+      setCode(pqs.pq1.DocTag);
+    }
+  }, [selectedOption])
 
   const handleSubmit = async () => {
     try {
       // Sending the code to backend
-      const result = await executeCode({ language: "py", code: code });
+      const unitTest = selectedOption in pqs ? pqs[selectedOption as keyof object].UnitTest : pqs.pq1.UnitTest;
+      const result = await executeCode({ language: "py", code: code + "\n\n\n" + unitTest });
       console.log("Execute Code Result:", result);
       const submitResult = await submitCode({
         problemId: "1", 
@@ -49,7 +58,8 @@ export default function App() {
   const handleRun = async () => {
     try {
       // Sending the code to backend
-      const result = await executeCode({ language: "py", code: code });
+      const unitTest = selectedOption in pqs ? pqs[selectedOption as keyof object].UnitTest : pqs.pq1.UnitTest;
+      const result = await executeCode({ language: "py", code: code + "\n\n\n" + unitTest });
       if (result.error === "") {
         setCodeExecResult(result.output);
         console.log("Output:", result.output);
@@ -72,10 +82,13 @@ export default function App() {
       handleRun={handleRun}
       selectedOption={selectedOption}
       setSelectedOption={setSelectedOption}
+      code={code}
+      modelResponse={modelResponse}
+      setModelResponse={setModelResponse}
     >
       <>
         <Authenticated>
-          <MainBoard code={code} setCode={setCode} codeExecResult={codeExecResult} selectedOption={selectedOption} />
+          <MainBoard code={code} setCode={setCode} codeExecResult={codeExecResult} selectedOption={selectedOption} modelResponse={modelResponse} />
           <></> {/* Placeholder */}
           {/* <ChatIntro />
           <Chat viewer={(user ?? {})._id!} /> */}
