@@ -4,8 +4,9 @@ interface Example {
   Explanation: string;
 }
 
-interface Problem {
+export interface Problem {
   No: number;
+  Title: string;
   Difficulty: string;
   Topics: string[];
   Prompt: string[];
@@ -17,6 +18,7 @@ interface Problem {
 
 const pq1: Problem = {
   No: 1,
+  Title: "Valid Palindrome",
   Difficulty: "Easy",
   Topics: ["Two Pointers", "String"],
   Prompt: [

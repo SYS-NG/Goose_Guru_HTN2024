@@ -73,7 +73,7 @@ export default function App() {
     >
       <>
         <Authenticated>
-          <MainBoard code={code} setCode={setCode} codeExecResult={codeExecResult} />
+          <MainBoard code={code} setCode={setCode} codeExecResult={codeExecResult} selectedOption={selectedOption} />
           <></> {/* Placeholder */}
           {/* <ChatIntro />
           <Chat viewer={(user ?? {})._id!} /> */}

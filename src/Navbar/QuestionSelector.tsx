@@ -25,10 +25,10 @@ export function QuestionSelector({ selectedOption, setSelectedOption }: Question
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Problems</SelectLabel>
-            <SelectItem value="problem1">Valid Palindrome</SelectItem>
-            <SelectItem value="problem2">Merge Sorted Array</SelectItem>
-            <SelectItem value="problem3">Two Sum</SelectItem> {/* Not Implemented! */}
-            <SelectItem value="problem4">Invert Binary Tree</SelectItem> {/* Not Implemented! */}
+            <SelectItem value="pq1">Valid Palindrome</SelectItem>
+            <SelectItem value="pq2">Merge Sorted Array</SelectItem>
+            <SelectItem value="pq3">Two Sum</SelectItem> {/* Not Implemented! */}
+            <SelectItem value="pq4">Invert Binary Tree</SelectItem> {/* Not Implemented! */}
           </SelectGroup>
         </SelectContent>
       </Select>
