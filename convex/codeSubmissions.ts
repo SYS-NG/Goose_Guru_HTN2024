@@ -96,29 +96,6 @@ export const evaluateChatHistory = action({
       user: No questions at the moment. Thanks for your time!
       interviewer: You're welcome! We'll be in touch with feedback soon. Have a great day!
     `
-
-    const outputStructure = {
-      overallFeedback: "string",
-      overallScore: "number",
-      engagment: {
-        feedback: "string",
-        score: "number"
-      },
-      honesty: {
-        feedback: "string",
-        score: "number"
-      },
-      openness: {
-        feedback: "string",
-        score: "number"
-      },
-      clear: {
-        feedback: "string",
-        score: "number"
-      },
-      areasForImprovement: ["string"]
-    };
-
     console.log(chatHistory);
 
     // Prepare the prompt with question data
@@ -137,9 +114,7 @@ export const evaluateChatHistory = action({
       Here is the chat history to evaluate:
       "${chatHistory}"
 
-      Output Structure: ${JSON.stringify(outputStructure, null, 2)}
-
-      Respond only with valid JSON that matches the provided structure.
+      Respond by providing an organized summary in Markdown format
       `;
 
     // Generate a response using Cohere API
@@ -231,9 +206,8 @@ export const submit = action({
       **Note**: You can ignore the function header as that is provided by the problem.
 
       Please provide detailed, actionable feedback on each of these aspects. Highlight areas where the candidate could improve, with specific suggestions on how to enhance the completeness, clarity, or efficiency of the solution. Finally, give an interview score from 1 to 10, where 10 represents a perfect solution, emphasizing completeness and adherence to best practices.
-      Output Structure: ${JSON.stringify(outputStructure, null, 2)}
-
-      Respond only with valid JSON that matches the provided structure.
+      
+      Respond by providing an organized summary in Markdown format
     `
 
     // Generate a response using Cohere API
