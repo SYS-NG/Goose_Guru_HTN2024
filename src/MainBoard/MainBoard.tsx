@@ -5,8 +5,13 @@ import { Question } from "@/Question/Question";
 import { IDE } from "@/IDE/IDE";
 import { Output } from "@/Output/Output";
 
-export function MainBoard({}) {
-  const [codeExecResult, setCodeExecResult] = useState("");
+interface MainBoardProps {
+  code: string;
+  setCode: React.Dispatch<React.SetStateAction<string>>;
+  codeExecResult: string;
+}
+
+export function MainBoard({ code, setCode, codeExecResult }: MainBoardProps) {
 
   return (
     <div className="flex flex-col md:flex-row justify-center w-full h-screen m-4 gap-5">
@@ -28,7 +33,7 @@ export function MainBoard({}) {
 
       {/* Second Column */}
       <div className="flex flex-col flex-1 gap-5 h-full">
-        <IDE setCodeExecResult={setCodeExecResult} />
+        <IDE code={code} setCode={setCode} />
         <Output codeExecResult={codeExecResult} />
       </div>
     </div>
