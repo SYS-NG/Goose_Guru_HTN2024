@@ -65,7 +65,7 @@ export function Layout({
             </Button>
             <Button 
               className="bg-green-500 text-white hover:bg-green-600 w-[100px]" 
-              onClick={()=>{handleSubmit; setIsInterviewStarted(false);}}
+              onClick={()=>{handleSubmit(); setIsInterviewStarted(false);}}
               disabled={!isInterviewStarted} // Disable until interview starts
             >
               Submit

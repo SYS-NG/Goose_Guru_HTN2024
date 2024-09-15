@@ -5,6 +5,7 @@ import { Question } from "@/Question/Question";
 import { IDE } from "@/IDE/IDE";
 import { Output } from "@/Output/Output";
 import { pqs } from "@/ProgrammingQuestions";
+import gooseIcon from '../Assets/goose_icon.jpg';
 
 interface MainBoardProps {
   code: string;
@@ -21,7 +22,7 @@ export function MainBoard({ code, setCode, codeExecResult, selectedOption, model
       <div className="flex flex-col flex-1 gap-5 h-full">
         {/* Interviewer - 25% Height */}
         <Interviewer 
-          imageSrc="https://media.wired.com/photos/5932933926780e6c04d2cc4d/master/pass/ff_musk4_f.jpg" 
+          imageSrc={gooseIcon}
           label={modelResponse !== null ? modelResponse : ""}
         />
         {/* Question - 75% Height */}

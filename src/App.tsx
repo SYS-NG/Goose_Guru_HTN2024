@@ -3,11 +3,32 @@ import { ChatIntro } from "@/Chat/ChatIntro";
 import { Layout } from "@/Layout";
 import { SignInForm } from "@/SignInForm";
 import { UserMenu } from "@/components/UserMenu";
-import { Authenticated, Unauthenticated, useQuery, useMutation, useAction } from "convex/react";
+import {
+  Authenticated,
+  Unauthenticated,
+  useQuery,
+  useMutation,
+  useAction,
+} from "convex/react";
 import { api } from "../convex/_generated/api";
 import { MainBoard } from "@/MainBoard/MainBoard";
 import { useState, useEffect } from "react";
 import { pqs } from "@/ProgrammingQuestions";
+import ReactMarkdown from "react-markdown";
+
+// Import ShadUI components
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@/components/ui/tabs";
 
 export default function App() {
   const user = useQuery(api.users.viewer);
@@ -18,39 +39,62 @@ export default function App() {
 
   const [code, setCode] = useState("");
   const [codeExecResult, setCodeExecResult] = useState("");
-  const [selectedOption, setSelectedOption] = useState<string>('pq1');
+  const [selectedOption, setSelectedOption] = useState<string>("pq1");
   const [modelResponse, setModelResponse] = useState<null | string>(null);
+
+  // New state variables for feedback, popup, and loading
+  const [codeFeedback, setCodeFeedback] = useState<string | null>(null);
+  const [chatFeedback, setChatFeedback] = useState<string | null>(null);
+  const [isPopupOpen, setIsPopupOpen] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (selectedOption in pqs) {
-      setCode(pqs[selectedOption as keyof object].DocTag);
+      setCode(pqs[selectedOption as keyof typeof pqs].DocTag);
     } else {
       setCode(pqs.pq1.DocTag);
     }
-  }, [selectedOption])
+  }, [selectedOption]);
 
   const handleSubmit = async () => {
     try {
+      setLoading(true); // Start loading
       // Sending the code to backend
-      const unitTest = selectedOption in pqs ? pqs[selectedOption as keyof object].UnitTest : pqs.pq1.UnitTest;
-      const result = await executeCode({ language: "py", code: code + "\n\n\n" + unitTest });
-      console.log("Execute Code Result:", result);
-      const submitResult = await submitCode({
-        problemId: "1", 
-        problemQuestion: "You are given two integer arrays nums1 and nums2, sorted in non-decreasing order, and two integers m and n, representing the number of elements in nums1 and nums2 respectively. Merge nums1 and nums2 into a single array sorted in non-decreasing order. The final sorted array should not be returned by the function, but instead be stored inside the array nums1. To accommodate this, nums1 has a length of m + n, where the first m elements denote the elements that should be merged, and the last n elements are set to 0 and should be ignored. nums2 has a length of n.", 
-        userAns: "class Solution:\ndef merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:\nmidx = m - 1\nnidx = n - 1 \nright = m + n - 1\nwhile nidx >= 0:\nif midx >= 0 and nums1[midx] > nums2[nidx]:\nnums1[right] = nums1[midx]\nmidx -= 1\nelse:\nnums1[right] = nums2[nidx]\nnidx -= 1\nright -= 1", 
-        canonicalAns: "class Solution:\ndef merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:"
+      const unitTest =
+        selectedOption in pqs
+          ? pqs[selectedOption as keyof typeof pqs].UnitTest
+          : pqs.pq1.UnitTest;
+      const result = await executeCode({
+        language: "py",
+        code: code + "\n\n\n" + unitTest,
       });
-      console.log("Submit Code Result:", submitResult);
+      console.log("Execute Code Result:", result);
+
+      const submitResult = await submitCode({
+        problemId: "1",
+        problemQuestion:
+          "You are given two integer arrays nums1 and nums2, sorted in non-decreasing order...",
+        userAns: code, // Assuming 'code' contains the user's answer
+        canonicalAns:
+          "class Solution:\n    def merge(self, nums1: List[int], m: int, nums2: List[int], n: int) -> None:",
+      });
+      console.log("Submit Code Result:", submitResult.submissionResponse);
 
       const evalChatResult = await evalChat();
-      console.log("Eval Chat Result", evalChatResult)
+      console.log("Eval Chat Result", evalChatResult.submissionResponse);
 
-      const endResult = await endInterview();
-      console.log("End Button Result:", endResult);
-  
+      await endInterview();
+
+      // Save feedback to state
+      setCodeFeedback(submitResult.submissionResponse);
+      setChatFeedback(evalChatResult.submissionResponse);
+
+      // Open the popup
+      setIsPopupOpen(true);
     } catch (error) {
       console.error("Error in Submit:", error);
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -58,8 +102,14 @@ export default function App() {
   const handleRun = async () => {
     try {
       // Sending the code to backend
-      const unitTest = selectedOption in pqs ? pqs[selectedOption as keyof object].UnitTest : pqs.pq1.UnitTest;
-      const result = await executeCode({ language: "py", code: code + "\n\n\n" + unitTest });
+      const unitTest =
+        selectedOption in pqs
+          ? pqs[selectedOption as keyof typeof pqs].UnitTest
+          : pqs.pq1.UnitTest;
+      const result = await executeCode({
+        language: "py",
+        code: code + "\n\n\n" + unitTest,
+      });
       if (result.error === "") {
         setCodeExecResult(result.output);
         console.log("Output:", result.output);
@@ -88,16 +138,68 @@ export default function App() {
     >
       <>
         <Authenticated>
-          <MainBoard code={code} setCode={setCode} codeExecResult={codeExecResult} selectedOption={selectedOption} modelResponse={modelResponse} />
-          <></> {/* Placeholder */}
-          {/* <ChatIntro />
-          <Chat viewer={(user ?? {})._id!} /> */}
+          <MainBoard
+            code={code}
+            setCode={setCode}
+            codeExecResult={codeExecResult}
+            selectedOption={selectedOption}
+            modelResponse={modelResponse}
+          />
+
+          {/* Loading Indicator */}
+          {loading && (
+            <div className="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50">
+              <Spinner />
+            </div>
+          )}
+
+          {/* Popup Dialog */}
+          {isPopupOpen && (
+            <Dialog
+              open={isPopupOpen}
+              onOpenChange={(open) => {
+                setIsPopupOpen(open);
+              }}
+            >
+              <DialogContent className="max-h-[80vh] overflow-auto">
+                <DialogHeader className="flex justify-between items-center">
+                  <DialogTitle>Feedback</DialogTitle>
+                  <button
+                    onClick={() => {
+                      setIsPopupOpen(false);
+                    }}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    Close
+                  </button>
+                </DialogHeader>
+                <Tabs defaultValue="codeFeedback">
+                  <TabsList className="mb-4">
+                    <TabsTrigger value="codeFeedback">Code Feedback</TabsTrigger>
+                    <TabsTrigger value="chatFeedback">Chat Feedback</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="codeFeedback">
+                    <ReactMarkdown>{codeFeedback ?? ""}</ReactMarkdown>
+                  </TabsContent>
+                  <TabsContent value="chatFeedback">
+                    <ReactMarkdown>{chatFeedback ?? ""}</ReactMarkdown>
+                  </TabsContent>
+                </Tabs>
+              </DialogContent>
+            </Dialog>
+          )}
         </Authenticated>
         <Unauthenticated>
-          <></> {/* Placeholder */}
           <SignInForm />
         </Unauthenticated>
       </>
     </Layout>
+  );
+}
+
+// Spinner Component
+function Spinner() {
+  return (
+    <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
   );
 }
