@@ -35,27 +35,56 @@ export const submit = action({
     canonicalAns: v.string(), 
   },
   handler: async (ctx, args) => {
+
+    const outputStructure = {
+      overallFeedback: "string",
+      overallScore: "number",
+      completeness: {
+        feedback: "string",
+        score: "number"
+      },
+      clarity: {
+        feedback: "string",
+        score: "number"
+      },
+      organization: {
+        feedback: "string",
+        score: "number"
+      },
+      efficiency: {
+        feedback: "string",
+        score: "number"
+      },
+      elegance: {
+        feedback: "string",
+        score: "number"
+      },
+      areasForImprovement: ["string"]
+    };
+
+
     // Prepare the prompt with question data
     const prompt: string = `
-      You are a technical interviewer evaluating a candidate's solution in a coding interview. Your task is to judge the candidate's code based on the following aspects:
+      You are a technical interviewer assessing a candidate's solution in a coding interview. Your main priority is to evaluate the **completeness** of the code, ensuring that the solution fully addresses the problem requirements and handles edge cases effectively. Additionally, judge the code based on the following criteria:
 
-      1. **Clarity**: How easy is the code to read and understand? Are variable names meaningful? Is the code well-commented and easy to follow?
-      2. **Organization**: Is the code structured logically? Are functions and methods used effectively to break the problem into smaller pieces?
-      3. **Efficiency**: How optimal is the solution in terms of time and space complexity? Could this solution scale effectively with larger input sizes?
-      4. **Elegance**: Are there any clever or elegant aspects of the solution? Did the candidate choose an approach that avoids unnecessary complexity?
-      5. **Comparison to the Canonical Solution**: How does this solution compare to a standard or canonical solution for this problem? What does the canonical solution do better, if anything?
-
+      1. **Clarity**: Is the code easy to read and understand? Are variable names descriptive and meaningful? Is the logic clear, and is the code sufficiently commented for someone unfamiliar with the problem?
+      2. **Organization**: Is the code well-structured? Are functions and methods used appropriately to break the problem into smaller, manageable parts? Is there a clear separation of concerns?
+      3. **Efficiency**: How efficient is the solution in terms of time and space complexity? Would the code scale well for larger datasets or more complex inputs?
+      4. **Elegance**: Does the candidate use any clever techniques or optimizations? Is the code free of unnecessary complexity, achieving the solution in a simple and direct way?
+      5. **completeness**: Is the solution complete and delivers what the question asks
+      
       Here is the problem description:
       "${args.problemQuestion}"
 
       Here is the candidate's solution:
       "${args.userAns}"
 
-      Ignore the function header as that is given by the problem.
+      **Note**: You can ignore the function header as that is provided by the problem.
 
-      Please provide comprehensive, concrete, and actionable feedback. Identify specific areas where the candidate could improve and suggest how they might do so. Finally, provide a score from 1 to 10, where 10 represents a perfect solution in terms of clarity, organization, efficiency, and comparison to the canonical solution.
+      Please provide detailed, actionable feedback on each of these aspects. Highlight areas where the candidate could improve, with specific suggestions on how to enhance the completeness, clarity, or efficiency of the solution. Finally, give an interview score from 1 to 10, where 10 represents a perfect solution, emphasizing completeness and adherence to best practices.
+      Output Structure: ${JSON.stringify(outputStructure, null, 2)}
 
-      Your response should be detailed, constructive, and helpful to the candidate. Be very strict and critical.
+      Respond only with valid JSON that matches the provided structure.
     `
 
     // Generate a response using Cohere API
