@@ -5,7 +5,7 @@ import { api } from "../convex/_generated/api";
 import { Id } from "../convex/_generated/dataModel";
 import { speakText } from '@/SpeakText';
 
-export const STT: React.FC = ({ restartCount }: { restartCount: number }) => {
+export const STT: React.FC = ({ restartCount, handleStart }: { restartCount: number, handleStart: () => void }) => {
   const [transcript, setTranscript] = useState(''); // Final transcript
   const [recognitionActive, setRecognitionActive] = useState(false);
   const [interimTranscript, setInterimTranscript] = useState(''); // Interim results
@@ -113,11 +113,14 @@ export const STT: React.FC = ({ restartCount }: { restartCount: number }) => {
 
   return (
     <Button 
-      className="bg-gray-500 text-white hover:bg-gray-600 w-[100px]"
-      onClick={startRecognition}
+      className="bg-gray-500 text-white hover:bg-gray-600 w-[150px]"
+      onClick={() => {
+        handleStart()
+        startRecognition()
+      }}
       disabled={recognitionActive}
     >
-      Turn On Audio
+      Start Interview
     </Button>
   );
 };
