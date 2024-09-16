@@ -1,56 +1,75 @@
-# Welcome to your Convex + React (Vite) + Convex Auth app
+# Goose Guru 🧠💬 - AI-Powered Coding Interviews (Hack the North)
 
-This is a [Convex](https://convex.dev/) project created with [`npm create convex`](https://www.npmjs.com/package/create-convex).
+[![Watch the Goose Guru Overview](https://img.youtube.com/vi/JY_KaTErGso/0.jpg)](https://youtu.be/JY_KaTErGso)
 
-After the initial setup (<2 minutes) you'll have a working full-stack app using:
+### 🚀 Ready to level up your coding interview skills? 🚀
 
-- Convex as your backend (database, server logic)
-- [Convex Auth](https://labs.convex.dev/auth) for your authentication implementation
-- [React](https://react.dev/) as your frontend (web page interactivity)
-- [Vite](https://vitest.dev/) for optimized web hosting
-- [Tailwind](https://tailwindcss.com/) and [shadcn/ui](https://ui.shadcn.com/) for building great looking accessible UI fast
+Goose Guru is here to help you **nail that coding interview** with real-time feedback, personalized insights, and a truly interactive AI-driven experience. Why settle for traditional mock interviews when you can **supercharge your preparation** with an AI platform built to sharpen both your **technical** and **behavioural** performance? Welcome to a smarter, faster way to get interview-ready.
 
-## Get started
+### Our Team 👋 
+- **Andy Lee**[@techandy42](https://github.com/techandy42) - Frontend Sorcerer 🎨🧙: UI Alchemist and Speech Synthesis Expert
+- **Steven Ng**[@SYS-NG](https://github.com/SYS-NG) - Backend Barbarian ⚔️: API Commander and LLM Whisperer
 
-If you just cloned this codebase and didn't use `npm create convex`, run:
+### Check Us Out! 👀
+- **Devpost Submission**: [Goose Guru on Devpost](https://devpost.com/software/goose-guru)
+---
 
-```
-npm install
-npm run dev
-```
+## Inspiration 💡
 
-If you're reading this README on GitHub and want to use this template, run:
+As developers, we know that coding interviews can be stressful. Traditional mock interviews feel rigid, and feedback often comes too late. **Goose Guru** was created to **bridge that gap**—to provide **real-time, actionable feedback** just like a real interview scenario. We wanted to create a tool that helps developers feel more **confident, prepared, and skilled** for those high-stakes interviews. 
 
-```
-npm create convex@latest -- -t react-vite-convexauth-shadcn
-```
+---
 
-## The app
+## What Goose Guru Does 🧑‍💻🤖
 
-The app is a basic multi-user chat. Walkthrough of the source code:
+- **💻 Code in your preferred language** and receive immediate feedback on your technical approach.
+- **🧠 Engage in realistic interview scenarios** powered by **Large Language Models (LLMs)** that feel just like the real deal.
+- **🎯 Get feedback on your behaviour**, with scores and advice to help you fine-tune both hard and soft skills.
+- **📊 Track your improvement** through detailed reports with clear goals, actionable insights, and personalized growth plans.
 
-- [convex/auth.ts](./convex/auth.ts) configures the available authentication methods
-- [convex/messages.ts](./convex/messages.ts) is the chat backend implementation
-- [src/main.tsx](./src/main.tsx) is the frontend entry-point
-- [src/App.tsx](./src/App.tsx) determines which UI to show based on the authentication state
-- [src/SignInForm.tsx](./src/SignInForm.tsx) implements the sign-in UI
-- [src/Chat/Chat.tsx](./src/Chat/Chat.tsx) is the chat frontend
+Imagine having an AI mock interview partner available 24/7, helping you **refine your problem-solving** skills, while also keeping an eye on how you present yourself. That's **Goose Guru**—a platform to help you not just practice, but **excel**!
 
-## Configuring other authentication methods
+---
 
-To configure different authentication methods, see [Configuration](https://labs.convex.dev/auth/config) in the Convex Auth docs.
+## How We Built It 🛠️
 
-## Learn more
+Our tech stack is crafted to deliver a **seamless, responsive**, and **data-driven** experience:
+- **Convex** for backend logic, ensuring a smooth flow of data between components.
+- **Cohere** for our AI-powered interview simulations, enabling intelligent and conversational feedback.
+- **React** to build a slick, fast frontend experience, so you can focus on improving.
+- **Tailwind CSS** for styling that makes our UI not just functional, but a delight to interact with.
 
-To learn more about developing your project with Convex, check out:
+This fusion of cutting-edge tools allows Goose Guru to deliver **real-time interactivity** and **engaging interview simulations** that feel natural and productive.
 
-- The [Tour of Convex](https://docs.convex.dev/get-started) for a thorough introduction to Convex principles.
-- The rest of [Convex docs](https://docs.convex.dev/) to learn about all Convex features.
-- [Stack](https://stack.convex.dev/) for in-depth articles on advanced topics.
+---
 
-## Join the community
+## Accomplishments We’re Proud Of 🏆
 
-Join thousands of developers building full-stack apps with Convex:
+We’re incredibly proud of the **Goose Guru** platform and what it offers:
+- **Fully functional, AI-powered mock interviews**, providing **real-time** technical and behavioral feedback.
+- **LLM integration** that makes interview simulations feel engaging and authentic.
+- **Beautiful, responsive UI** that is both functional and visually appealing—perfect for an immersive interview experience.
 
-- Join the [Convex Discord community](https://convex.dev/community) to get help in real-time.
-- Follow [Convex on GitHub](https://github.com/get-convex/), star and contribute to the open-source implementation of Convex.
+We’re also thrilled that, despite our time constraints, we’ve successfully built a platform that’s not only functional but **a game-changer** in interview preparation.
+
+---
+
+## Try it Yourself 🚀
+
+Want to see **Goose Guru** in action? Here’s how to run it locally:
+
+### Installation Steps
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo/goose-guru.git
+2. Navigate into the project directory:
+   ```bash
+   cd goose-guru
+3. Install dependencies:
+   ```bash
+   npm install
+4. Start the development server:
+   ```bash
+   npm run dev
+That's it! 🚀 You'll be walked through setting up your Convex Project and add your own Cohere and Judge0 API Keys. Your app should now be running on localhost:5173
